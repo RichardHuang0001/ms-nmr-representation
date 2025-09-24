@@ -1,0 +1,14 @@
+meta_data（元数据）
+含义：描述各类谱数据的结构与解释信息，用于指导解析、校验与预处理。
+组成：
+meta_data_dict.json：按谱种分类存放描述信息（例如 c_nmr_spectra, h_nmr_spectra, hsqc_nmr_spectrum, ir_spectra, msms_* 等），每个谱种通常包含
+dimensions：该谱或数据矩阵的维度定义（轴名称、顺序、含义）
+format：存储格式/编码方式的说明
+info：额外字段或列含义说明
+unit：单位（如 ppm、Hz、m/z、intensity 等）
+spectrum_dimensions.json：给出主要谱种的尺寸/轴信息汇总（例如 c_nmr_spectra, h_nmr_spectra, hsqc_nmr_spectrum_c/h, ir_spectra 的维度定义），便于程序快速获知期望的形状与轴。
+用途：当你从 parquet/数组读取数据时，依据元数据确定如何解释每一列/轴、单位换算、张量形状和校验规则。
+example_data（示例数据）
+含义：少量真实格式的样例文件，便于你快速验证读取逻辑与预处理流程。
+组成：example_data_1.parquet, example_data_2.parquet 等。
+用途：作为样本输入，结合 meta_data 的字段与维度说明，验证加载、解析、特征抽取与可视化是否正确。
