@@ -1,0 +1,3 @@
+[submodule "multimodal-spectroscopic-dataset"]
+	path = multimodal-spectroscopic-dataset
+	url = git@github.com:RichardHuang0001/multimodal-spectroscopic-dataset.git
