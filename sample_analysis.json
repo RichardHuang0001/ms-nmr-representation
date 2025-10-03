@@ -1,0 +1,105 @@
+{
+  "dataset_info": {
+    "total_samples": 3268,
+    "total_features": 17,
+    "columns": [
+      "smiles",
+      "hsqc_nmr_peaks",
+      "hsqc_nmr_spectrum",
+      "h_nmr_peaks",
+      "h_nmr_spectra",
+      "molecular_formula",
+      "c_nmr_peaks",
+      "ir_spectra",
+      "msms_positive_10ev",
+      "msms_positive_20ev",
+      "msms_positive_40ev",
+      "msms_fragments_positive",
+      "msms_negative_10ev",
+      "msms_negative_20ev",
+      "msms_negative_40ev",
+      "msms_fragments_negative",
+      "c_nmr_spectra"
+    ]
+  },
+  "sample_molecules": [
+    {
+      "sample_id": 1,
+      "molecular_formula": "C19H16FN3O4",
+      "smiles": "C[C@](O)(COc1ccc(C#N)c(F)c1)C(=O)Nc1ccc(C#N)c(CO)c1",
+      "h_nmr_spectra_stats": {
+        "length": 10000,
+        "mean": 0.000244921597186476,
+        "std": 0.003157614031806588,
+        "min": 0.0,
+        "max": 0.22309499979019165
+      },
+      "c_nmr_spectra_stats": {
+        "length": 10000,
+        "mean": 0.00011425879999999999,
+        "std": 0.002296274366059631,
+        "min": 0.0,
+        "max": 0.149562
+      },
+      "ir_spectra_stats": {
+        "length": 1800,
+        "mean": 0.008478280156850815,
+        "std": 0.03968793898820877,
+        "min": -0.007792000193148851,
+        "max": 1.0
+      }
+    },
+    {
+      "sample_id": 2,
+      "molecular_formula": "C16H15BrO2",
+      "smiles": "CCOC(=O)c1cccc(-c2c(C)cccc2Br)c1",
+      "h_nmr_spectra_stats": {
+        "length": 10000,
+        "mean": 0.00023010540462564677,
+        "std": 0.002930068876594305,
+        "min": 0.0,
+        "max": 0.13796499371528625
+      },
+      "c_nmr_spectra_stats": {
+        "length": 10000,
+        "mean": 0.00010907929999999998,
+        "std": 0.002453324673542316,
+        "min": 0.0,
+        "max": 0.125013
+      },
+      "ir_spectra_stats": {
+        "length": 1800,
+        "mean": 0.01891147345304489,
+        "std": 0.07092873007059097,
+        "min": -0.023114999756217003,
+        "max": 1.0
+      }
+    },
+    {
+      "sample_id": 3,
+      "molecular_formula": "C11H12N2O",
+      "smiles": "N#CCc1ccc(NCC2CO2)cc1",
+      "h_nmr_spectra_stats": {
+        "length": 10000,
+        "mean": 0.0001826306979637593,
+        "std": 0.0019187901634722948,
+        "min": 0.0,
+        "max": 0.07498499751091003
+      },
+      "c_nmr_spectra_stats": {
+        "length": 10000,
+        "mean": 6.56358e-05,
+        "std": 0.0018316716045073038,
+        "min": 0.0,
+        "max": 0.138647
+      },
+      "ir_spectra_stats": {
+        "length": 1800,
+        "mean": 0.041380323469638824,
+        "std": 0.09205333888530731,
+        "min": -0.015579000115394592,
+        "max": 1.0
+      }
+    }
+  ]
+}
