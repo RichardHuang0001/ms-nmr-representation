@@ -1,3 +1,15 @@
+import debugpy
+try:
+    # 5678 is the default attach port in the VS Code debug configurations. Unless a host and port are specified, host defaults to 127.0.0.1
+    debugpy.listen(("localhost", 9501))
+    print("Waiting for debugger attach")
+    debugpy.wait_for_client()
+except Exception as e:
+    pass
+
+
+### 以上为调试器代码部分
+
 # <-- [核心] 启动模型训练的主入口脚本
 import torch
 import yaml
@@ -23,6 +35,12 @@ def set_seed(seed):
 
 def main(config_path):
     """主函数，负责初始化和启动训练。"""
+        # 配置日志记录 ---
+    logging.basicConfig(
+        level=logging.INFO, # 设置日志级别为INFO，这样INFO及以上级别的日志都会被记录
+        format='%(asctime)s - %(levelname)s - [%(filename)s:%(lineno)d] - %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S'
+    )
     logging.info("--- 启动预训练任务 ---")
 
     # 1. 加载配置
@@ -79,5 +97,5 @@ def main(config_path):
 if __name__ == "__main__":
     # 在运行前，确保你已经登录了wandb: `wandb login`
     # 并安装了box: `pip install python-box`
-    config_path = "configs/pretrain_set_transformer_v1.yaml"
+    config_path = "configs/pretrain_set_transformer.yaml"
     main(config_path)

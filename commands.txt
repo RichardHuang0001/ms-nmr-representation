@@ -6,3 +6,9 @@ try:
     debugpy.wait_for_client()
 except Exception as e:
     pass
+
+
+### 如果端口被占用（可能是上一次没关完全），查询并杀进程
+lsof -i :9501
+
+kill 2159631
