@@ -1,3 +1,4 @@
+## set_transformer.py
 # -*- coding: utf-8 -*-
 """
 我们的核心模型架构。
@@ -31,7 +32,7 @@ class MAB(nn.Module):
             self.ln1 = nn.LayerNorm(dim_V)
         self.fc_o = nn.Linear(dim_V, dim_V)
 
-    def forward(self, Q, K):
+    def forward(self, Q, K, mask=None): # <--- [修正1] 增加 mask 参数
         Q = self.fc_q(Q)
         K, V = self.fc_k(K), self.fc_v(K)
 
@@ -39,21 +40,35 @@ class MAB(nn.Module):
         Q_ = torch.cat(Q.split(dim_split, 2), 0)
         K_ = torch.cat(K.split(dim_split, 2), 0)
         V_ = torch.cat(V.split(dim_split, 2), 0)
+        
+        # --- [修正2] 应用注意力掩码 ---
+        # 计算注意力分数
+        A = Q_.bmm(K_.transpose(1, 2)) / math.sqrt(self.dim_V)
+        if mask is not None:
+            # 将mask广播到多头注意力需要的形状
+            # 原始mask: [B, L] -> [B, 1, L] -> [B*H, 1, L] -> [B*H, L_q, L_k]
+            # 这里Q和K的序列长度相同，简化处理
+            mask_ = mask.unsqueeze(1).repeat(self.num_heads, Q.size(1), 1)
+            A = A.masked_fill(mask_ == 0, -1e9) # 用一个极大的负数填充mask位置
 
-        A = torch.softmax(Q_.bmm(K_.transpose(1,2))/math.sqrt(self.dim_V), 2)
+        A = torch.softmax(A, 2)
+        # --------------------------------
+
         O = torch.cat((Q_ + A.bmm(V_)).split(Q.size(0), 0), 2)
         O = O if getattr(self, 'ln0', None) is None else self.ln0(O)
         O = O + F.relu(self.fc_o(O))
         O = O if getattr(self, 'ln1', None) is None else self.ln1(O)
         return O
 
+# --------------------------------
 class SAB(nn.Module):
     def __init__(self, dim_in, dim_out, num_heads, ln=False):
         super(SAB, self).__init__()
         self.mab = MAB(dim_in, dim_in, dim_out, num_heads, ln=ln)
 
-    def forward(self, X):
-        return self.mab(X, X)
+    def forward(self, X, mask=None): # <--- [修正3] 增加 mask 参数
+        return self.mab(X, X, mask=mask)
+
 
 class ISAB(nn.Module):
     def __init__(self, dim_in, dim_out, num_heads, num_inds, ln=False):
@@ -150,14 +165,12 @@ class PretrainSetTransformer(nn.Module):
         # 将输入投影到隐藏维度
         x = self.encoder_input_proj(masked_input)
 
-        # 2. 通过Set Transformer编码器
-        # 注意：官方的SAB模块不直接处理mask。我们需要手动应用mask。
-        # 这是一个简化的处理方式，更严谨的方式是在MAB中修改softmax部分。
-        # 但对于Set Transformer，通常假设输入已经是有效的集合。
-        # 我们可以通过在损失函数中忽略padding位置的输出来解决这个问题。
-        encoded_representation = self.encoder(x)
+        # --- [修正4] 向编码器传递 attention_mask ---
+        # 遍历Sequential中的SAB层并传递mask
+        encoded_representation = x
+        for layer in self.encoder:
+            encoded_representation = layer(encoded_representation, mask=attention_mask)
         
-        # 3. 通过重建头部进行预测
         predictions = self.reconstruction_head(encoded_representation)
         
         return predictions

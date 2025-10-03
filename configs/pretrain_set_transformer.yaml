@@ -1,0 +1,41 @@
+# --- 实验参数 ---
+experiment:
+  seed: 42 # 用于复现实验结果的随机种子
+
+# --- 数据集参数 ---
+data:
+  processed_dir: "data/processed"
+  val_split_ratio: 0.1 # 验证集划分比例
+  max_peaks: 512
+  masking_fraction: 0.15
+  num_workers: 0 # [调试] 调试时设为0，避免多进程问题
+
+# --- 特征维度定义 (用于损失函数计算) ---
+# 避免在代码中硬编码索引
+feature_slices:
+  modality: [0, 2]       # 模态ID (one-hot)
+  numerical: [2, 6]      # 4个连续数值特征
+  multiplicity: [6, 12]  # 多重性 (one-hot)
+
+# --- 模型参数 ---
+model:
+  dim_input: 12
+  dim_output: 12
+  dim_hidden: 256
+  num_heads: 8
+  num_inds: 32
+  depth: 6
+  ln: True
+
+# --- 训练参数 ---
+training:
+  device: "cuda:0" # 如果有GPU则使用cuda:0，否则改为cpu
+  epochs: 100
+  batch_size: 4  # [调试] 减小批量大小以便于调试
+  learning_rate: 0.0001
+  checkpoint_dir: "checkpoints" # 保存模型检查点的目录
+  
+# --- 实验管理 ---
+wandb:
+  project_name: "ms-nmr-pretrain"
+  run_name: "set-transformer-v1-debug" # [调试] 修改实验名称
