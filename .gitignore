@@ -1,0 +1,64 @@
+# Data directories (do not track large datasets)
+/data/
+!/data/README.md
+!/data/.gitkeep
+
+# Allow small metadata under data but ignore typical large subtrees
+/data/raw/
+/data/processed/
+
+# Python caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Notebooks checkpoints
+.ipynb_checkpoints/
+
+# Model outputs and checkpoints
+checkpoints/
+outputs/
+logs/
+wandb/
+mlruns/
+.tensorboard/
+
+# Virtual environments and conda envs
+.env/
+.venv/
+venv/
+env/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE/editor
+.vscode/
+.idea/
+
+# HuggingFace and common ML caches (project-local)
+.huggingface/
+.hf_cache/
+.hf_cache_tmp/
+.hf_home/
+.tf_cache/
+.transformers_cache/
+.torch/
+.cache/
+
+# Large archives
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.bz2
+*.xz
+
+# Temporary files
+*.swp
+*.swo
+*.tmp
+*.bak
+
