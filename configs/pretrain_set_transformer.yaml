@@ -8,7 +8,7 @@ data:
   val_split_ratio: 0.1 # 验证集划分比例
   max_peaks: 512
   masking_fraction: 0.15
-  num_workers: 0 # [调试] 调试时设为0，避免多进程问题
+  num_workers: 4 # 恢复为多进程数据加载
 
 # --- 特征维度定义 (用于损失函数计算) ---
 # 避免在代码中硬编码索引
@@ -29,13 +29,13 @@ model:
 
 # --- 训练参数 ---
 training:
-  device: "cuda:0" # 如果有GPU则使用cuda:0，否则改为cpu
-  epochs: 100
-  batch_size: 4  # [调试] 减小批量大小以便于调试
+  device: "cuda:1" # [修改] 指定使用1号GPU
+  epochs: 5 # [修改] 先设置一个较小的epoch数以便快速验证
+  batch_size: 4  # [确认] 使用较小的批量大小
   learning_rate: 0.0001
   checkpoint_dir: "checkpoints" # 保存模型检查点的目录
   
 # --- 实验管理 ---
 wandb:
   project_name: "ms-nmr-pretrain"
-  run_name: "set-transformer-v1-debug" # [调试] 修改实验名称
+  run_name: "set-transformer-v1-gpu1-testrun" # [修改] 修改为本次测试的实验名称

@@ -16,6 +16,7 @@ class Trainer:
         self.config = config
         self.device = torch.device(config.training.device if torch.cuda.is_available() else "cpu")
         self.model.to(self.device)
+        logging.info(f"✅ 模型和数据将使用设备: {self.device}")
 
         # 初始化W&B
         wandb.init(project=config.wandb.project_name, name=config.wandb.run_name, config=config)
@@ -24,9 +25,12 @@ class Trainer:
     def _calculate_loss(self, predictions, labels):
         """计算混合损失函数。"""
         # 找到被mask的位置 (labels中不为-100的地方)
-        active_loss = labels != -100
-        active_preds = predictions[active_loss]
-        active_labels = labels[active_loss]
+        # 我们只根据每个峰向量的第一个元素来判断，以生成一个二维的掩码
+        active_mask = labels[:, :, 0] != -100
+        
+        # 使用二维掩码来选取完整的峰向量
+        active_preds = predictions[active_mask]
+        active_labels = labels[active_mask]
 
         if active_preds.shape[0] == 0:
             return torch.tensor(0.0, device=self.device, requires_grad=True)
