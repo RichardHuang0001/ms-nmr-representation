@@ -1,9 +1,11 @@
 # Conda环境名称
 name: spectra
 
-# 依赖库的下载通道，conda-forge是社区维护的、非常全面的通道
+# 依赖库的下载通道
+# 'nvidia' 通道提供了针对NVIDIA GPU优化的包
 channels:
   - pytorch
+  - nvidia   # 添加nvidia通道，用于获取pytorch-cuda
   - conda-forge
   - defaults
 
@@ -12,27 +14,39 @@ dependencies:
   # 核心环境
   - python=3.10
 
-  # 深度学习框架 (我们指定从pytorch通道下载，并选择CPU版本，因为您在Mac上)
-  - pytorch::pytorch
-  - pytorch::cpuonly 
+  # --- 深度学习框架 ---
+  # 请根据您的运行环境，取消注释对应的部分，并注释掉另一部分。
+
+  # [选项1: 在有NVIDIA GPU的Linux服务器上安装]
+  # 我们需要指定pytorch-cuda的版本来匹配服务器的驱动。
+  # 您的服务器驱动支持CUDA 12.4，因此我们选择官方推荐的CUDA 12.1版本。
+  - pytorch
+  - torchvision
+  - torchaudio
+  - pytorch-cuda=12.1
+
+  # [选项2: 在没有GPU的Mac或Windows/Linux上安装 (CPU版本)]
+  # 如果您的本地机器没有NVIDIA GPU，请注释掉上面的4行，并取消注释下面的2行。
+  # - pytorch::pytorch
+  # - pytorch::cpuonly 
   
   # 数据处理与科学计算
   - pandas
-  - pyarrow       # 高效读写Parquet文件
+  - pyarrow
   - numpy
   
   # 化学信息学
-  - conda-forge::rdkit  # 明确指定从conda-forge通道下载RDKit
+  - conda-forge::rdkit
   
   # 工具与可视化
   - matplotlib
   - seaborn
-  - tqdm          # 优雅的进度条
-  - pyyaml        # 用于加载我们的.yaml配置文件
-  - jupyterlab    # 用于运行notebooks
+  - tqdm
+  - pyyaml
+  - jupyterlab
   
   # 实验跟踪
-  - wandb           # 强烈推荐的实验管理工具
+  - wandb
   
-  # pip包管理器 (以备不时之需)
+  # pip包管理器
   - pip
